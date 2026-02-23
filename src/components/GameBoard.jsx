@@ -104,7 +104,7 @@ const GameBoard = ({
     if (isObstacle(x, y)) return ''
     if (isDoorBlock(x, y)) return ''
     if (isStartPoint(x, y)) return (
-      <img src="/exit_sign.png" alt="Exit" className="cell-exit-sign" />
+      <img src={`${import.meta.env.BASE_URL}exit_sign.png`} alt="Exit" className="cell-exit-sign" />
     )
     
     if (guessedPoint && gameStatus === 'playing') {

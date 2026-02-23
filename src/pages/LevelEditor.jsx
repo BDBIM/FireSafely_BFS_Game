@@ -337,7 +337,7 @@ function LevelEditor() {
 
                     return (
                       <div key={`${x}-${y}`} className={cellClass}>
-                        {isStart && <img src="/exit_sign.png" alt="Exit" className="editor-exit-sign" />}
+                        {isStart && <img src={`${import.meta.env.BASE_URL}exit_sign.png`} alt="Exit" className="editor-exit-sign" />}
                         {isFarthest && '⭐'}
                         {!isStart && !isObstacle && !isDoorBlock && !isFarthest && distance !== Infinity && distance.toFixed(0)}
                       </div>
@@ -374,7 +374,7 @@ function LevelEditor() {
                       title={`(${x}, ${y})`}
                     >
                       {cellInfo.type === 'exit' ? (
-                        <img src="/exit_sign.png" alt="Exit" className="editor-exit-sign" />
+                        <img src={`${import.meta.env.BASE_URL}exit_sign.png`} alt="Exit" className="editor-exit-sign" />
                       ) : (
                         cellInfo.content
                       )}
