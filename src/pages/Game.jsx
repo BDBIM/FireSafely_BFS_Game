@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import GameBoard from '../components/GameBoard'
 import GameInfo from '../components/GameInfo'
 import GameConfig from '../components/GameConfig'
-import { generateMap, calculateDistanceToNearestStartForPoint, checkIsObstacle, checkIsDoorBlock } from '../components/MapGenerator'
+import { generateMap, calculateDistanceToNearestStartForPoint, checkIsObstacle } from '../components/MapGenerator'
 import '../App.css'
 
 function Game() {
@@ -13,10 +13,9 @@ function Game() {
   const presetLevel = location.state?.level || null
 
   const [gridSize, setGridSize] = useState(presetLevel?.gridSize || 10)
-  const [exitCount, setExitCount] = useState(null) // null 表示自動
+  const [doorCount, setDoorCount] = useState(null) // null 表示自動
   const [obstaclePercentage, setObstaclePercentage] = useState(15)
   const [maxAttempts, setMaxAttempts] = useState(5)
-  const [onlyWallObstacles, setOnlyWallObstacles] = useState(true) // 默認只生成牆壁障礙物
   const [startPoints, setStartPoints] = useState([])
   const [farthestPoints, setFarthestPoints] = useState([])
   const [guessedPoints, setGuessedPoints] = useState([])
@@ -25,7 +24,6 @@ function Game() {
   const [score, setScore] = useState(0)
   const [allCellDistances, setAllCellDistances] = useState({})
   const [obstacles, setObstacles] = useState([])
-  const [doorBlocks, setDoorBlocks] = useState([])
 
   // 初始化遊戲
   const initializeGame = () => {
@@ -33,9 +31,8 @@ function Game() {
       gridSize, 
       gameMode, 
       presetLevel, 
-      exitCount, 
-      obstaclePercentage,
-      onlyWallObstacles
+      doorCount, 
+      obstaclePercentage
     )
     
     if (mapData.gridSize !== gridSize) {
@@ -45,7 +42,6 @@ function Game() {
     setStartPoints(mapData.startPoints)
     setFarthestPoints(mapData.farthestPoints)
     setObstacles(mapData.obstacles)
-    setDoorBlocks(mapData.doorBlocks || [])
     setAllCellDistances(mapData.allCellDistances)
     setGuessedPoints([])
     setGameStatus('waiting')
@@ -62,7 +58,6 @@ function Game() {
     }
     if (startPoints.some(sp => sp.x === x && sp.y === y)) return
     if (checkIsObstacle(x, y, obstacles)) return
-    if (checkIsDoorBlock(x, y, doorBlocks)) return // door blocks 不能點擊
     if (guessedPoints.some(p => p.x === x && p.y === y)) return
     
     const newAttempts = attempts + 1
@@ -70,8 +65,7 @@ function Game() {
       { x, y }, 
       startPoints, 
       obstacles, 
-      gridSize,
-      doorBlocks
+      gridSize
     )
     const isCorrect = farthestPoints.some(fp => fp.x === x && fp.y === y)
     
@@ -115,18 +109,13 @@ function Game() {
       }
     }
     
-    if (config.exitCount !== undefined && config.exitCount !== exitCount) {
-      setExitCount(config.exitCount)
+    if (config.doorCount !== undefined && config.doorCount !== doorCount) {
+      setDoorCount(config.doorCount)
       shouldReinitialize = true
     }
     
     if (config.obstaclePercentage !== undefined && config.obstaclePercentage !== obstaclePercentage) {
       setObstaclePercentage(config.obstaclePercentage)
-      shouldReinitialize = true
-    }
-    
-    if (config.onlyWallObstacles !== undefined && config.onlyWallObstacles !== onlyWallObstacles) {
-      setOnlyWallObstacles(config.onlyWallObstacles)
       shouldReinitialize = true
     }
     
@@ -163,10 +152,9 @@ function Game() {
         </div>
         <GameConfig
           gridSize={gridSize}
-          exitCount={exitCount}
+          doorCount={doorCount}
           obstaclePercentage={obstaclePercentage}
           maxAttempts={maxAttempts}
-          onlyWallObstacles={onlyWallObstacles}
           onConfigChange={handleConfigChange}
           gameMode={gameMode}
           gameStatus={gameStatus}
@@ -191,7 +179,6 @@ function Game() {
           onCellClick={handleCellClick}
           allCellDistances={allCellDistances}
           obstacles={obstacles}
-          doorBlocks={doorBlocks}
         />
       </div>
     </div>

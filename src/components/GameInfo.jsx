@@ -62,7 +62,7 @@ const GameInfo = ({
       {startPoints && startPoints.length > 0 && (
         <div className="hint-section">
           <p className="hint-text">
-            💡 提示：有 {startPoints.length} 個 Exit {startPoints.map((sp, idx) => `(${sp.x}, ${sp.y})`).join('、')}，請找出距離最近 Exit 最遠的格子！注意：黑色格子是障礙物（牆壁），需要繞過它們。
+            💡 提示：有 {startPoints.length} 個 door {startPoints.map((sp, idx) => `(${sp.x}, ${sp.y})`).join('、')}，請找出距離最近 door 最遠的格子！注意：黑色格子是障礙物（牆壁），需要繞過它們。
           </p>
         </div>
       )}

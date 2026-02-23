@@ -28,6 +28,52 @@ const GameBoard = ({
     return doorBlocks && doorBlocks.some(db => db.x === x && db.y === y)
   }
 
+  // 檢查點是否在網格範圍內
+  const isValidPosition = (x, y) => {
+    return x >= 0 && x < gridSize && y >= 0 && y < gridSize
+  }
+
+  // 檢查是否為牆壁（只檢查 wall 類型的障礙物）
+  const isWall = (x, y) => {
+    if (!isValidPosition(x, y)) return false
+    const obstacle = obstacles && obstacles.find(obs => obs.x === x && obs.y === y)
+    return obstacle?.type === 'wall'
+  }
+
+  // 獲取門的開啟方向（根據周圍牆壁位置）
+  const getDoorDirection = (x, y) => {
+    // 檢查四個方向的牆壁
+    const hasWallTop = isWall(x, y - 1)
+    const hasWallBottom = isWall(x, y + 1)
+    const hasWallLeft = isWall(x - 1, y)
+    const hasWallRight = isWall(x + 1, y)
+
+    // 在建築平面圖中，門應該沿著牆的方向開啟
+    // 如果上下有牆（垂直牆），門應該垂直開（上下開）
+    if (hasWallTop || hasWallBottom) {
+      // 如果上邊有牆，門向下開（門板在上，圓弧向下）
+      // 如果下邊有牆，門向上開（門板在下，圓弧向上）
+      if (hasWallTop && !hasWallBottom) return 'down'
+      if (hasWallBottom && !hasWallTop) return 'up'
+      // 如果上下都有牆或都沒有牆，默認向下開
+      return 'down'
+    }
+    
+    // 如果左右有牆（水平牆），門應該水平開（左右開），但門板垂直放置
+    // 實際上在這種情況下，門也是水平開的，只是門板位置不同
+    if (hasWallLeft || hasWallRight) {
+      // 如果左邊有牆，門向右開（門板在左，圓弧向右）
+      // 如果右邊有牆，門向左開（門板在右，圓弧向左）
+      if (hasWallLeft && !hasWallRight) return 'right'
+      if (hasWallRight && !hasWallLeft) return 'left'
+      // 默認向右開
+      return 'right'
+    }
+
+    // 如果沒有明顯的牆壁方向，默認向右開
+    return 'right'
+  }
+
   // 檢查是否為起點
   const isStartPoint = (x, y) => {
     return startPoints && startPoints.some(sp => sp.x === x && sp.y === y)
@@ -83,7 +129,10 @@ const GameBoard = ({
       const obstacleType = getObstacleType(x, y)
       return classes + ` obstacle obstacle-${obstacleType}`
     }
-    if (isDoorBlock(x, y)) return classes + ' door-block'
+    if (isDoorBlock(x, y)) {
+      const direction = getDoorDirection(x, y)
+      return classes + ` door-block door-${direction}`
+    }
     if (isStartPoint(x, y)) return classes + ' start-point'
     if (gameStatus !== 'playing' && gameStatus !== 'waiting' && isFarthestPoint(x, y)) return classes + ' farthest-point'
     
@@ -102,7 +151,7 @@ const GameBoard = ({
 
   const getCellContent = (x, y, guessedPoint, distance) => {
     if (isObstacle(x, y)) return ''
-    if (isDoorBlock(x, y)) return '🚪'
+    if (isDoorBlock(x, y)) return '' // 門的內容由 CSS 繪製
     if (isStartPoint(x, y)) return 'Exit'
     
     if (guessedPoint && gameStatus === 'playing') {

@@ -51,113 +51,14 @@
   transform: none;
 }
 
-.cell.door-block {
-  background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
-  border: 2px solid #ff8c00;
-  cursor: not-allowed;
-  position: relative;
-  font-size: 1.2rem;
-}
-
-.cell.door-block::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 3px,
-    rgba(255, 255, 255, 0.2) 3px,
-    rgba(255, 255, 255, 0.2) 6px
-  );
-}
-
-.cell.door-block:hover {
-  transform: none;
-  background: linear-gradient(135deg, #ffed4e 0%, #ffb347 100%);
-  box-shadow: inset 0 0 10px rgba(255, 140, 0, 0.3);
-}
-
 .cell.obstacle {
+  background: #000000;
   cursor: not-allowed;
 }
 
-/* 牆壁類型 - 黑色實心 */
-.cell.obstacle-wall {
-  background: #000000;
-}
-
-.cell.obstacle-wall:hover {
+.cell.obstacle:hover {
   transform: none;
   background: #000000;
-}
-
-/* 空氣塊類型 - 半透明藍色調 */
-.cell.obstacle-air {
-  background: linear-gradient(135deg, rgba(135, 206, 250, 0.6) 0%, rgba(70, 130, 180, 0.7) 100%);
-  border: 1px solid rgba(135, 206, 250, 0.8);
-  position: relative;
-}
-
-.cell.obstacle-air::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.1) 2px,
-    rgba(255, 255, 255, 0.1) 4px
-  );
-}
-
-.cell.obstacle-air:hover {
-  transform: none;
-  background: linear-gradient(135deg, rgba(135, 206, 250, 0.7) 0%, rgba(70, 130, 180, 0.8) 100%);
-}
-
-/* 通道塊類型 - 灰色石質紋理 */
-.cell.obstacle-pathway {
-  background: linear-gradient(135deg, #8b8b8b 0%, #5a5a5a 100%);
-  border: 1px solid #6b6b6b;
-  position: relative;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.cell.obstacle-pathway::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 1px,
-      rgba(0, 0, 0, 0.1) 1px,
-      rgba(0, 0, 0, 0.1) 2px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 1px,
-      rgba(0, 0, 0, 0.1) 1px,
-      rgba(0, 0, 0, 0.1) 2px
-    );
-}
-
-.cell.obstacle-pathway:hover {
-  transform: none;
-  background: linear-gradient(135deg, #9b9b9b 0%, #6a6a6a 100%);
 }
 
 .cell.farthest-point {
