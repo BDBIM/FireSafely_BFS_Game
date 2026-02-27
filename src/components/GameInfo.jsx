@@ -47,16 +47,13 @@ const GameInfo = ({
               <span className="stat-value">{score}</span>
             </div>
           )}
+          <button 
+            className="reset-button"
+            onClick={onReset}
+          >
+            {gameStatus === 'playing' ? '重新開始' : '新遊戲'}
+          </button>
         </div>
-      </div>
-      
-      <div className="controls-section">
-        <button 
-          className="reset-button"
-          onClick={onReset}
-        >
-          {gameStatus === 'playing' ? '重新開始' : '新遊戲'}
-        </button>
       </div>
       
       {startPoints && startPoints.length > 0 && (
