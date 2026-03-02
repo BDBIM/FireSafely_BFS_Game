@@ -1,6 +1,8 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 function DifficultyStars({ difficulty, className = '' }) {
+  const { t } = useTranslation()
   if (difficulty == null || typeof difficulty !== 'number') return null
 
   const stars = Math.max(0.5, Math.min(5, difficulty / 2))
@@ -9,7 +11,7 @@ function DifficultyStars({ difficulty, className = '' }) {
   const emptyCount = 5 - fullCount - (hasHalf ? 1 : 0)
 
   return (
-    <span className={`inline-flex items-center gap-0 text-[1em] leading-none ${className}`} title={`難度 ${difficulty}/10`}>
+    <span className={`inline-flex items-center gap-0 text-[1em] leading-none ${className}`} title={t('game.level') + ' ' + difficulty + '/10'}>
       {Array.from({ length: fullCount }, (_, i) => (
         <span key={`full-${i}`} className="inline-block text-[#f0c040]">★</span>
       ))}

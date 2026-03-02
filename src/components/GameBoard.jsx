@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import './GameBoard.css'
 
 const GameBoard = ({
@@ -12,6 +13,7 @@ const GameBoard = ({
   obstacles,
   doorBlocks
 }) => {
+  const { t } = useTranslation()
   // 檢查是否為障礙物
   const isObstacle = (x, y) => {
     return obstacles && obstacles.some(obs => obs.x === x && obs.y === y)
@@ -142,29 +144,18 @@ const GameBoard = ({
   const getCellTitle = (x, y, distance, guessedPoint) => {
     if (isObstacle(x, y)) {
       const obstacleType = getObstacleType(x, y)
-      const typeNames = {
-        'wall': '障礙物（牆壁）',
-        'air': '障礙物（空氣塊）',
-        'pathway': '障礙物（通道塊）'
-      }
-      return typeNames[obstacleType] || '障礙物'
+      const typeKeys = { wall: 'board.obstacleWall', air: 'board.obstacleAir', pathway: 'board.obstaclePathway' }
+      return t(typeKeys[obstacleType] || 'board.obstacle')
     }
-    if (isDoorBlock(x, y)) return '門方塊（可通過，但不可選中）'
+    if (isDoorBlock(x, y)) return t('board.doorBlock')
     if (isStartPoint(x, y)) return 'Exit'
-    
     if (guessedPoint) {
-      return guessedPoint.distance === Infinity 
-        ? '無法到達' 
-        : `距離: ${guessedPoint.distance.toFixed(2)}`
+      return guessedPoint.distance === Infinity ? t('board.unreachable') : `${t('board.distance')}: ${guessedPoint.distance.toFixed(2)}`
     }
-    
     if ((gameStatus === 'won' || gameStatus === 'lost') && distance !== undefined) {
-      return distance === Infinity 
-        ? '無法到達（障礙物阻擋）' 
-        : `距離: ${distance.toFixed(2)}`
+      return distance === Infinity ? t('board.unreachableObstacle') : `${t('board.distance')}: ${distance.toFixed(2)}`
     }
-    
-    return '點擊猜測'
+    return t('board.clickToGuess')
   }
 
   return (

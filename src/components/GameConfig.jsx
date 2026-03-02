@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import './GameConfig.css'
 
 const GameConfig = ({
@@ -16,6 +17,7 @@ const GameConfig = ({
   const [localObstaclePercentage, setLocalObstaclePercentage] = useState(obstaclePercentage)
   const [localMaxAttempts, setLocalMaxAttempts] = useState(maxAttempts)
   const [localOnlyWallObstacles, setLocalOnlyWallObstacles] = useState(onlyWallObstacles)
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef(null)
 
@@ -61,7 +63,7 @@ const GameConfig = ({
     <div className="absolute top-3 right-3 z-20" ref={containerRef}>
       <button
         type="button"
-        title="遊戲配置"
+        title={t('gameConfig.title')}
         onClick={() => setIsOpen(!isOpen)}
         className={`w-9 h-9 rounded-full flex items-center justify-center text-lg leading-none cursor-pointer select-none transition-all duration-300 border-[1.5px] ${
           isOpen
@@ -75,12 +77,12 @@ const GameConfig = ({
       {isOpen && (
         <div className="config-panel-in absolute top-[calc(100%+8px)] right-0 w-[310px] md:w-[310px] max-w-[calc(100vw-32px)] rounded-xl p-3.5 bg-gradient-to-br from-[#f5f7fa] to-[#dce5f0] shadow-lg">
           <div className="text-base font-bold text-gray-800 text-center mb-3 pb-2 border-b-2 border-[#667eea]/20">
-            遊戲配置
+            {t('gameConfig.panelTitle')}
           </div>
 
           <div className="mb-3">
             <label htmlFor="config-grid-size" className="block text-sm text-gray-800 font-semibold mb-1">
-              網格大小：<span className="text-[#667eea] font-bold ml-1">{localGridSize}x{localGridSize}</span>
+              {t('gameConfig.gridSize')}：<span className="text-[#667eea] font-bold ml-1">{localGridSize}x{localGridSize}</span>
             </label>
             <input
               type="range"
@@ -113,17 +115,17 @@ const GameConfig = ({
 
           <div className="mb-3">
             <label htmlFor="config-exit-count" className="block text-sm text-gray-800 font-semibold mb-1">
-              Exit 數量：<span className="text-[#667eea] font-bold ml-1">{localExitCount === null ? '自動' : localExitCount}</span>
+              {t('gameConfig.exitCount')}：<span className="text-[#667eea] font-bold ml-1">{localExitCount === null ? t('gameConfig.auto') : localExitCount}</span>
             </label>
             <div className="flex flex-wrap gap-x-2.5 gap-y-1.5 mt-1">
               <label className="flex items-center gap-1 font-medium cursor-pointer text-[0.82rem]">
                 <input type="radio" name="exit-count" checked={localExitCount === null} onChange={() => setLocalExitCount(null)} disabled={isDisabled} className="w-3.5 h-3.5 cursor-pointer accent-[#667eea] disabled:opacity-60 disabled:cursor-not-allowed" />
-                自動 (2-4個)
+                {t('gameConfig.auto')}
               </label>
               {[1, 2, 3, 4, 5, 6].map(count => (
                 <label key={count} className="flex items-center gap-1 font-medium cursor-pointer text-[0.82rem]">
                   <input type="radio" name="exit-count" checked={localExitCount === count} onChange={() => setLocalExitCount(count)} disabled={isDisabled} className="w-3.5 h-3.5 cursor-pointer accent-[#667eea] disabled:opacity-60 disabled:cursor-not-allowed" />
-                  {count} 個
+                  {t('gameConfig.exits', { count })}
                 </label>
               ))}
             </div>
@@ -131,7 +133,7 @@ const GameConfig = ({
 
           <div className="mb-3">
             <label htmlFor="config-obstacle" className="block text-sm text-gray-800 font-semibold mb-1">
-              障礙物比例：<span className="text-[#667eea] font-bold ml-1">{localObstaclePercentage}%</span>
+              {t('gameConfig.obstaclePercent')}：<span className="text-[#667eea] font-bold ml-1">{localObstaclePercentage}%</span>
             </label>
             <input
               type="range"
@@ -166,14 +168,14 @@ const GameConfig = ({
           <div className="mb-3">
             <label htmlFor="config-only-wall" className="flex items-center gap-1.5 font-semibold text-sm text-gray-800 cursor-pointer">
               <input type="checkbox" id="config-only-wall" checked={localOnlyWallObstacles} onChange={(e) => setLocalOnlyWallObstacles(e.target.checked)} disabled={isDisabled} className="w-3.5 h-3.5 cursor-pointer accent-[#667eea] mr-1.5 disabled:opacity-60 disabled:cursor-not-allowed" />
-              只生成牆壁障礙物（默認）
+              {t('gameConfig.onlyWalls')}
             </label>
-            <p className="text-[0.74rem] text-gray-500 mt-0.5 ml-5 italic leading-snug">啟用後只生成黑色牆壁，不生成空氣塊和通道塊</p>
+            <p className="text-[0.74rem] text-gray-500 mt-0.5 ml-5 italic leading-snug">{t('gameConfig.onlyWallsHint')}</p>
           </div>
 
           <div className="mb-3">
             <label htmlFor="config-attempts" className="block text-sm text-gray-800 font-semibold mb-1">
-              最大嘗試次數：<span className="text-[#667eea] font-bold ml-1">{localMaxAttempts} 次</span>
+              {t('gameConfig.maxAttempts')}：<span className="text-[#667eea] font-bold ml-1">{t('gameConfig.maxAttemptsValue', { count: localMaxAttempts })}</span>
             </label>
             <input
               type="range"
@@ -206,10 +208,10 @@ const GameConfig = ({
 
           <div className="flex gap-2 mt-2.5 pt-2.5 border-t-2 border-[#667eea]/20">
             <button type="button" onClick={handleApply} disabled={isDisabled} className="flex-1 py-1.5 px-3 rounded-lg text-sm font-semibold text-white bg-gradient-to-br from-[#667eea] to-[#764ba2] border-none shadow-md hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none transition-all">
-              應用配置
+              {t('gameConfig.apply')}
             </button>
             <button type="button" onClick={handleReset} disabled={isDisabled} className="flex-1 py-1.5 px-3 rounded-lg text-sm font-semibold text-[#667eea] bg-white border border-[#667eea] hover:bg-gray-100 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none transition-all">
-              重置為默認
+              {t('gameConfig.resetDefault')}
             </button>
           </div>
         </div>

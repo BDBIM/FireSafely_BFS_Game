@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import GameBoard from '../components/GameBoard'
 import GameInfo from '../components/GameInfo'
 import GameConfig from '../components/GameConfig'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 import { generateMap, calculateDistanceToNearestStartForPoint, checkIsObstacle, checkIsDoorBlock } from '../components/MapGenerator'
 
 function Game() {
+  const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
   const gameMode = location.state?.mode || 'random' // 'random' or 'preset'
@@ -201,13 +204,16 @@ function Game() {
             onClick={handleBackToHome}
             className="py-2.5 px-5 rounded-lg text-white font-semibold text-base bg-gradient-to-br from-[#667eea] to-[#764ba2] border-none shadow-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 md:w-auto w-full"
           >
-            ← 返回首頁
+            ← {t('common.backToHome')}
           </button>
-          {gameMode === 'preset' && presetLevel && (
-            <div className="py-2 px-4 rounded-lg text-white font-semibold text-sm bg-gradient-to-br from-[#f093fb] to-[#f5576c]">
-              關卡: {presetLevel.name}
-            </div>
-          )}
+          <div className="flex items-center gap-3 flex-wrap">
+            <LanguageSwitcher />
+            {gameMode === 'preset' && presetLevel && (
+              <div className="py-2 px-4 rounded-lg text-white font-semibold text-sm bg-gradient-to-br from-[#f093fb] to-[#f5576c]">
+                {t('game.level')}: {presetLevel.name}
+              </div>
+            )}
+          </div>
         </div>
         {gameMode === 'random' && (
           <GameConfig
