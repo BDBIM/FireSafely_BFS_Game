@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { presetLevels } from '../data/presetLevels'
 import { getSavedLevels, deleteLevel, importLevel } from '../utils/levelStorage'
 import './Home.css'
 
@@ -16,10 +15,6 @@ function Home() {
 
   const handleRandomMode = () => {
     navigate('/game', { state: { mode: 'random' } })
-  }
-
-  const handlePresetMode = (level) => {
-    navigate('/game', { state: { mode: 'preset', level } })
   }
 
   const handleCustomMode = (level) => {
@@ -70,26 +65,21 @@ function Home() {
 
         <div className="mode-selection">
 
-        <div className="mode-card">
-            <div className="mode-icon">📋</div>
-            <h2 className="mode-title">預設關卡</h2>
-            <p className="mode-description">
-              選擇精心設計的關卡，挑戰不同難度的謎題！
-            </p>
-            <div className="preset-levels">
-              {presetLevels.map((level, index) => (
-                <button
-                  key={index}
-                  className="level-button"
-                  onClick={() => handlePresetMode(level)}
-                >
-                  <span className="level-name">{level.name}</span>
-                  <span className="level-details">
-                    {level.gridSize}x{level.gridSize} · {level.difficulty}
-                  </span>
-                </button>
-              ))}
-            </div>
+        <div className="mode-card mode-card-buttons">
+            <button
+              className="mode-choice-button"
+              onClick={() => {}}
+              type="button"
+            >
+              經典模式
+            </button>
+            <button
+              className="mode-choice-button"
+              onClick={() => navigate('/presetLevels')}
+              type="button"
+            >
+              預設模式
+            </button>
           </div>
 
           <div className="mode-card" onClick={handleRandomMode}>
@@ -133,7 +123,15 @@ function Home() {
                     >
                       <span className="level-name">{level.name}</span>
                       <span className="level-details">
-                        {level.gridSize}x{level.gridSize} · {level.difficulty || '自定義'}
+                        {level.gridSize}x{level.gridSize}
+                        {typeof level.difficulty === 'number' && (
+                          <> · 難度 {level.difficulty}</>
+                        )}
+                        {level.timeLimit != null ? (
+                          <> · 限時 {level.timeLimit}秒</>
+                        ) : (
+                          <> · 無時間限制</>
+                        )}
                       </span>
                     </button>
                     <button

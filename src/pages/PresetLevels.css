@@ -1,0 +1,89 @@
+.preset-levels-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.preset-levels-container {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 600px;
+}
+
+.preset-levels-header {
+  margin-bottom: 24px;
+}
+
+.preset-levels-header .btn-back {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background: #f5f7fa;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.preset-levels-header .btn-back:hover {
+  background: #667eea;
+  color: white;
+}
+
+.preset-levels-title {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.preset-levels-description {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.preset-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preset-levels .level-button {
+  padding: 15px 20px;
+  background: white;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.preset-levels .level-button:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: translateX(5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.preset-levels .level-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.preset-levels .level-details {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}

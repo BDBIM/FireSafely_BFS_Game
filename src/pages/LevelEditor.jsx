@@ -17,6 +17,18 @@ function LevelEditor() {
   const [obstacles, setObstacles] = useState(importedLevel?.obstacles || [])
   const [doorBlocks, setDoorBlocks] = useState(importedLevel?.doorBlocks || [])
   const [levelName, setLevelName] = useState(importedLevel?.name || '')
+  const [difficulty, setDifficulty] = useState(() => {
+    const d = importedLevel?.difficulty
+    return typeof d === 'number' && d >= 1 && d <= 10 ? d : 5
+  })
+  const [timeLimit, setTimeLimit] = useState(() => {
+    const t = importedLevel?.timeLimit
+    return t != null && typeof t === 'number' && t >= 0 ? t : null
+  })
+  const [timeLimitInput, setTimeLimitInput] = useState(() => {
+    const t = importedLevel?.timeLimit
+    return t != null && typeof t === 'number' && t >= 0 ? String(t) : ''
+  })
   const [previewMode, setPreviewMode] = useState(false)
   const [previewData, setPreviewData] = useState(null)
 
@@ -46,6 +58,17 @@ function LevelEditor() {
       setObstacles([])
       setDoorBlocks([])
       setLevelName('')
+    } else {
+      const d = importedLevel.difficulty
+      setDifficulty(typeof d === 'number' && d >= 1 && d <= 10 ? d : 5)
+      const t = importedLevel.timeLimit
+      if (t != null && typeof t === 'number' && t >= 0) {
+        setTimeLimit(t)
+        setTimeLimitInput(String(t))
+      } else {
+        setTimeLimit(null)
+        setTimeLimitInput('')
+      }
     }
   }, [gridSize, importedLevel])
 
@@ -125,6 +148,8 @@ function LevelEditor() {
     const level = {
       name: levelName || '未命名關卡',
       gridSize,
+      difficulty,
+      timeLimit,
       startPoints,
       obstacles,
       doorBlocks
@@ -156,10 +181,11 @@ function LevelEditor() {
     const level = {
       name: levelName.trim(),
       gridSize,
+      difficulty,
+      timeLimit,
       startPoints: [...startPoints],
       obstacles: [...obstacles],
-      doorBlocks: [...doorBlocks],
-      difficulty: '自定義'
+      doorBlocks: [...doorBlocks]
     }
 
     if (saveLevel(level)) {
@@ -180,10 +206,11 @@ function LevelEditor() {
     const level = {
       name: levelName || '未命名關卡',
       gridSize,
+      difficulty,
+      timeLimit,
       startPoints: [...startPoints],
       obstacles: [...obstacles],
-      doorBlocks: [...doorBlocks],
-      difficulty: '自定義'
+      doorBlocks: [...doorBlocks]
     }
 
     exportLevel(level)
@@ -245,6 +272,31 @@ function LevelEditor() {
                   placeholder="輸入關卡名稱"
                   value={levelName}
                   onChange={(e) => setLevelName(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label>難度 (1-10):</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={10}
+                  value={difficulty}
+                  onChange={(e) => setDifficulty(Math.max(1, Math.min(10, parseInt(e.target.value, 10) || 1)))}
+                />
+              </div>
+              <div className="form-group">
+                <label>時間限制 (秒):</label>
+                <input
+                  type="number"
+                  min={1}
+                  placeholder="留空 = 無時間限制"
+                  value={timeLimitInput}
+                  onChange={(e) => {
+                    const raw = e.target.value.trim()
+                    setTimeLimitInput(raw)
+                    const n = raw === '' ? null : parseInt(raw, 10)
+                    setTimeLimit(n != null && !isNaN(n) && n >= 1 ? n : null)
+                  }}
                 />
               </div>
             </div>
