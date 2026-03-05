@@ -17,11 +17,11 @@ function Home() {
   }, [])
 
   const handleRandomMode = () => {
-    navigate('/game', { state: { mode: 'random' } })
+    navigate('/game/random')
   }
 
   const handleCustomMode = (level) => {
-    navigate('/game', { state: { mode: 'preset', level } })
+    navigate('/game/preset', { state: { level } })
   }
 
   const handleCreateLevel = () => {
@@ -79,8 +79,8 @@ function Home() {
             <p className="text-gray-500 text-sm md:text-base mb-0">{t('home.selectModeHint')}</p>
             <button
               type="button"
-              onClick={() => {}}
-              className="w-full py-4 px-6 rounded-xl text-lg font-semibold text-white bg-gradient-to-br from-gray-500 to-gray-700 border-2 border-transparent shadow-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
+              onClick={() => navigate('/game/classic')}
+              className="w-full py-4 px-6 rounded-xl text-lg font-semibold text-white bg-gradient-to-br from-primary to-primary-dark border-2 border-transparent shadow-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
             >
               {t('home.classicMode')}
             </button>

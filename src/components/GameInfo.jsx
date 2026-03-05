@@ -67,26 +67,32 @@ const GameInfo = ({
               <span className="text-lg font-bold text-[#667eea]">{score}</span>
             </div>
           )}
-          <button
-            type="button"
-            onClick={onReset}
-            className="py-2 px-5 rounded-lg text-white font-semibold text-base bg-gradient-to-br from-[#667eea] to-[#764ba2] border-none shadow-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 relative z-10 pointer-events-auto select-none"
-          >
-            {gameStatus === 'playing' ? t('game.restart') : t('game.newGame')}
-          </button>
+          {gameMode !== 'classic' && (
+            <button
+              type="button"
+              onClick={onReset}
+              className="py-2 px-5 rounded-lg text-white font-semibold text-base bg-gradient-to-br from-[#667eea] to-[#764ba2] border-none shadow-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 relative z-10 pointer-events-auto select-none"
+            >
+              {gameStatus === 'playing' ? t('game.restart') : t('game.newGame')}
+            </button>
+          )}
         </div>
       </div>
+    </div>
+  )
+}
 
-      {startPoints && startPoints.length > 0 && (
-        <div className="rounded-lg p-3 text-center bg-amber-100 border-2 border-amber-400">
-          <p className="text-amber-800 text-sm font-medium m-0">
-            {t('game.hint', {
-              count: startPoints.length,
-              coords: startPoints.map((sp) => `(${sp.x}, ${sp.y})`).join(i18n.language === 'zh-Hant' ? '、' : ', ')
-            })}
-          </p>
-        </div>
-      )}
+export const GameHint = ({ startPoints }) => {
+  const { t, i18n } = useTranslation()
+  if (!startPoints || startPoints.length === 0) return null
+  return (
+    <div className="mt-5 rounded-lg p-3 text-center bg-amber-100 border-2 border-amber-400">
+      <p className="text-amber-800 text-sm font-medium m-0">
+        {t('game.hint', {
+          count: startPoints.length,
+          coords: startPoints.map((sp) => `(${sp.x}, ${sp.y})`).join(i18n.language === 'zh-Hant' ? '、' : ', ')
+        })}
+      </p>
     </div>
   )
 }

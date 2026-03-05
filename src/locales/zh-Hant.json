@@ -51,6 +51,7 @@
     "score": "得分",
     "newGame": "新遊戲",
     "restart": "重新開始",
+    "exportLevel": "導出 JSON",
     "hint": "提示：有 {{count}} 個 Exit {{coords}}，請找出距離最近 Exit 最遠的格子！注意：黑色格子是障礙物（牆壁），需要繞過它們。"
   },
   "gameConfig": {
@@ -79,6 +80,7 @@
     "difficulty": "難度 (1-10)",
     "timeLimit": "時間限制 (秒)",
     "timeLimitPlaceholder": "留空 = 無時間限制",
+    "maxAttempts": "最大嘗試次數",
     "stats": "統計信息",
     "exitCount": "Exit 數量",
     "obstacleCount": "障礙物數量",
@@ -87,6 +89,7 @@
     "preview": "預覽",
     "save": "保存",
     "exportJson": "導出 JSON",
+    "importToEdit": "匯入以編輯",
     "clear": "清除",
     "previewMode": "預覽模式",
     "exitPreview": "退出預覽",
@@ -106,6 +109,17 @@
     "saveSuccess": "關卡保存成功！",
     "saveFailed": "保存失敗，請重試",
     "confirmClear": "確定要清除所有內容嗎？"
+  },
+  "classic": {
+    "levelCounter": "關卡 {{current}} / {{total}}",
+    "totalTime": "總耗時",
+    "nextLevelIn": "{{seconds}} 秒後進入下一關…",
+    "allComplete": "全部通關！",
+    "gameOver": "遊戲結束",
+    "noLevels": "暫無預設關卡。",
+    "totalScore": "總分",
+    "levelsTotal": "關卡合計",
+    "timeBonus": "時間獎勵"
   },
   "board": {
     "obstacleWall": "障礙物（牆壁）",

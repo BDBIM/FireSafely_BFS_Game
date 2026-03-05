@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { saveLevel, exportLevel } from '../utils/levelStorage'
+import { saveLevel, exportLevel, importLevel } from '../utils/levelStorage'
 import { generateMap } from '../components/MapGenerator'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import './LevelEditor.css'
@@ -26,14 +26,20 @@ function LevelEditor() {
   })
   const [timeLimit, setTimeLimit] = useState(() => {
     const t = importedLevel?.timeLimit
-    return t != null && typeof t === 'number' && t >= 0 ? t : null
+    return t != null && typeof t === 'number' && t >= 0 ? t : 30
   })
   const [timeLimitInput, setTimeLimitInput] = useState(() => {
     const t = importedLevel?.timeLimit
-    return t != null && typeof t === 'number' && t >= 0 ? String(t) : ''
+    return t != null && typeof t === 'number' && t >= 0 ? String(t) : '30'
+  })
+  const [maxAttempts, setMaxAttempts] = useState(() => {
+    const m = importedLevel?.maxAttempts
+    return typeof m === 'number' && m >= 1 ? m : 5
   })
   const [previewMode, setPreviewMode] = useState(false)
   const [previewData, setPreviewData] = useState(null)
+  const importFileInputRef = useRef(null)
+  const hasInitializedEmptyRef = useRef(false)
 
   // 判斷指定障礙物清單中的牆壁
   const isWallObstacle = (x, y, obstacleList = obstacles) => {
@@ -54,14 +60,18 @@ function LevelEditor() {
     return 'door-horizontal'
   }
 
-  // 初始化空網格（僅在沒有導入關卡時）
+  // 卸載時移除匯入用 file input
   useEffect(() => {
-    if (!importedLevel) {
-      setStartPoints([])
-      setObstacles([])
-      setDoorBlocks([])
-      setLevelName('')
-    } else {
+    return () => {
+      const input = importFileInputRef.current
+      if (input?.parentNode) input.parentNode.removeChild(input)
+      importFileInputRef.current = null
+    }
+  }, [])
+
+  // 僅在初次進入編輯器且無從路由帶入的關卡時清空；之後用「匯入以編輯」載入時不再清空（避免 effect 因 gridSize 變動而清掉剛匯入的資料）
+  useEffect(() => {
+    if (importedLevel) {
       const d = importedLevel.difficulty
       setDifficulty(typeof d === 'number' && d >= 1 && d <= 10 ? d : 5)
       const t = importedLevel.timeLimit
@@ -69,11 +79,19 @@ function LevelEditor() {
         setTimeLimit(t)
         setTimeLimitInput(String(t))
       } else {
-        setTimeLimit(null)
-        setTimeLimitInput('')
+        setTimeLimit(30)
+        setTimeLimitInput('30')
       }
+      const m = importedLevel.maxAttempts
+      setMaxAttempts(typeof m === 'number' && m >= 1 ? m : 5)
+    } else if (!hasInitializedEmptyRef.current) {
+      hasInitializedEmptyRef.current = true
+      setStartPoints([])
+      setObstacles([])
+      setDoorBlocks([])
+      setLevelName('')
     }
-  }, [gridSize, importedLevel])
+  }, [importedLevel])
 
   // 套用工具到指定格子（供點擊與拖曳使用）
   // isDragging: 拖曳時為 true，只做「塗上」或「擦除」，不做切換
@@ -153,6 +171,7 @@ function LevelEditor() {
       gridSize,
       difficulty,
       timeLimit,
+      maxAttempts,
       startPoints,
       obstacles,
       doorBlocks
@@ -186,6 +205,7 @@ function LevelEditor() {
       gridSize,
       difficulty,
       timeLimit,
+      maxAttempts,
       startPoints: [...startPoints],
       obstacles: [...obstacles],
       doorBlocks: [...doorBlocks]
@@ -197,6 +217,56 @@ function LevelEditor() {
     } else {
       alert(t('editor.saveFailed'))
     }
+  }
+
+  // 匯入關卡到編輯器編輯（使用單一 input 並每次清空 value，才能連續匯入不同或相同檔案）
+  const handleImportToEdit = () => {
+    let input = importFileInputRef.current
+    if (!input) {
+      input = document.createElement('input')
+      input.type = 'file'
+      input.accept = '.json'
+      input.style.display = 'none'
+      document.body.appendChild(input)
+      importFileInputRef.current = input
+    }
+    input.value = ''
+    input.onchange = async (e) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+      try {
+        const level = await importLevel(file)
+        if (!level.gridSize || !level.startPoints || !level.obstacles) {
+          alert(t('home.invalidLevelFile'))
+          return
+        }
+        const size = Math.max(3, Math.min(30, parseInt(level.gridSize, 10) || 10))
+        setGridSize(size)
+        setStartPoints(Array.isArray(level.startPoints) ? level.startPoints : [])
+        setObstacles(Array.isArray(level.obstacles) ? level.obstacles : [])
+        setDoorBlocks(Array.isArray(level.doorBlocks) ? level.doorBlocks : [])
+        setLevelName(level.name != null ? String(level.name) : '')
+        const d = level.difficulty
+        setDifficulty(typeof d === 'number' && d >= 1 && d <= 10 ? d : 5)
+        const t = level.timeLimit
+        if (t != null && typeof t === 'number' && t >= 0) {
+          setTimeLimit(t)
+          setTimeLimitInput(String(t))
+        } else {
+          setTimeLimit(30)
+          setTimeLimitInput('30')
+        }
+        const m = level.maxAttempts
+        setMaxAttempts(typeof m === 'number' && m >= 1 ? m : 5)
+        setPreviewMode(false)
+        setPreviewData(null)
+      } catch (err) {
+        alert(err?.message || t('home.importFailed'))
+      } finally {
+        input.value = ''
+      }
+    }
+    input.click()
   }
 
   // 導出關卡
@@ -211,6 +281,7 @@ function LevelEditor() {
       gridSize,
       difficulty,
       timeLimit,
+      maxAttempts,
       startPoints: [...startPoints],
       obstacles: [...obstacles],
       doorBlocks: [...doorBlocks]
@@ -297,7 +368,7 @@ function LevelEditor() {
                   className="w-full py-2 px-3 border-2 border-gray-200 rounded-md text-base focus:outline-none focus:border-[#667eea] transition-colors"
                 />
               </div>
-              <div className="mb-0">
+              <div className="mb-4">
                 <label className="block mb-1 text-gray-600 font-medium">{t('editor.timeLimit')}:</label>
                 <input
                   type="number"
@@ -310,6 +381,17 @@ function LevelEditor() {
                     const n = raw === '' ? null : parseInt(raw, 10)
                     setTimeLimit(n != null && !isNaN(n) && n >= 1 ? n : null)
                   }}
+                  className="w-full py-2 px-3 border-2 border-gray-200 rounded-md text-base focus:outline-none focus:border-[#667eea] transition-colors"
+                />
+              </div>
+              <div className="mb-0">
+                <label className="block mb-1 text-gray-600 font-medium">{t('editor.maxAttempts')}:</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={99}
+                  value={maxAttempts}
+                  onChange={(e) => setMaxAttempts(Math.max(1, Math.min(99, parseInt(e.target.value, 10) || 5)))}
                   className="w-full py-2 px-3 border-2 border-gray-200 rounded-md text-base focus:outline-none focus:border-[#667eea] transition-colors"
                 />
               </div>
@@ -333,6 +415,7 @@ function LevelEditor() {
                 <button type="button" onClick={handlePreview} className="py-3 px-4 rounded-lg border-none cursor-pointer text-base font-semibold text-white bg-gradient-to-br from-[#84fab0] to-[#8fd3f4] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">👁️ {t('editor.preview')}</button>
                 <button type="button" onClick={handleSave} className="py-3 px-4 rounded-lg border-none cursor-pointer text-base font-semibold text-white bg-gradient-to-br from-[#667eea] to-[#764ba2] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">💾 {t('editor.save')}</button>
                 <button type="button" onClick={handleExport} className="py-3 px-4 rounded-lg border-none cursor-pointer text-base font-semibold text-white bg-gradient-to-br from-[#f093fb] to-[#f5576c] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">📥 {t('editor.exportJson')}</button>
+                <button type="button" onClick={handleImportToEdit} className="py-3 px-4 rounded-lg border-none cursor-pointer text-base font-semibold text-white bg-gradient-to-br from-[#4facfe] to-[#00f2fe] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">📂 {t('editor.importToEdit')}</button>
                 <button type="button" onClick={handleClear} className="py-3 px-4 rounded-lg border-none cursor-pointer text-base font-semibold text-white bg-red-400 hover:bg-red-500 hover:-translate-y-0.5 transition-all duration-300">🗑️ {t('editor.clear')}</button>
               </div>
             </div>

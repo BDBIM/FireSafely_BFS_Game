@@ -51,6 +51,7 @@
     "score": "Score",
     "newGame": "Nouvelle partie",
     "restart": "Recommencer",
+    "exportLevel": "Exporter JSON",
     "hint": "Indice : {{count}} sortie(s) en {{coords}}. Trouvez la case la plus éloignée ! Les cases noires sont des obstacles (murs)."
   },
   "gameConfig": {
@@ -79,6 +80,7 @@
     "difficulty": "Difficulté (1–10)",
     "timeLimit": "Temps limite (s)",
     "timeLimitPlaceholder": "Vide = illimité",
+    "maxAttempts": "Tentatives max",
     "stats": "Statistiques",
     "exitCount": "Sorties",
     "obstacleCount": "Obstacles",
@@ -87,6 +89,7 @@
     "preview": "Aperçu",
     "save": "Enregistrer",
     "exportJson": "Exporter JSON",
+    "importToEdit": "Importer pour modifier",
     "clear": "Effacer",
     "previewMode": "Mode aperçu",
     "exitPreview": "Quitter l'aperçu",
@@ -106,6 +109,17 @@
     "saveSuccess": "Niveau enregistré !",
     "saveFailed": "Échec de l'enregistrement",
     "confirmClear": "Effacer tout le contenu ?"
+  },
+  "classic": {
+    "levelCounter": "Niveau {{current}} / {{total}}",
+    "totalTime": "Temps total",
+    "nextLevelIn": "Niveau suivant dans {{seconds}}s…",
+    "allComplete": "Tous les niveaux terminés !",
+    "gameOver": "Partie terminée",
+    "noLevels": "Aucun niveau prédéfini.",
+    "totalScore": "Score total",
+    "levelsTotal": "Total niveaux",
+    "timeBonus": "Bonus temps"
   },
   "board": {
     "obstacleWall": "Obstacle (mur)",

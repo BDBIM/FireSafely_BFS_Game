@@ -10,7 +10,7 @@ function PresetLevels() {
   const navigate = useNavigate()
 
   const handleSelectLevel = (level) => {
-    navigate('/game', { state: { mode: 'preset', level } })
+    navigate('/game/preset', { state: { level } })
   }
 
   return (

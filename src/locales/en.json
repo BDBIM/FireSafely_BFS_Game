@@ -51,6 +51,7 @@
     "score": "Score",
     "newGame": "New Game",
     "restart": "Restart",
+    "exportLevel": "Export JSON",
     "hint": "Tip: {{count}} Exit(s) at {{coords}}. Find the cell farthest from the nearest Exit! Black cells are obstacles (walls)."
   },
   "gameConfig": {
@@ -79,6 +80,7 @@
     "difficulty": "Difficulty (1–10)",
     "timeLimit": "Time limit (sec)",
     "timeLimitPlaceholder": "Leave empty = unlimited",
+    "maxAttempts": "Max attempts",
     "stats": "Stats",
     "exitCount": "Exit count",
     "obstacleCount": "Obstacles",
@@ -87,6 +89,7 @@
     "preview": "Preview",
     "save": "Save",
     "exportJson": "Export JSON",
+    "importToEdit": "Import to edit",
     "clear": "Clear",
     "previewMode": "Preview mode",
     "exitPreview": "Exit preview",
@@ -106,6 +109,17 @@
     "saveSuccess": "Level saved!",
     "saveFailed": "Save failed, please try again",
     "confirmClear": "Clear all content?"
+  },
+  "classic": {
+    "levelCounter": "Level {{current}} / {{total}}",
+    "totalTime": "Total time",
+    "nextLevelIn": "Next level in {{seconds}}s...",
+    "allComplete": "All levels complete!",
+    "gameOver": "Game over",
+    "noLevels": "No preset levels available.",
+    "totalScore": "Total score",
+    "levelsTotal": "Levels total",
+    "timeBonus": "Time bonus"
   },
   "board": {
     "obstacleWall": "Obstacle (wall)",

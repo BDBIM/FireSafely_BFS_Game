@@ -1,0 +1,268 @@
+{
+  "name": "04-2ExitHall",
+  "gridSize": 15,
+  "difficulty": 4,
+  "timeLimit": 30,
+  "startPoints": [
+    {
+      "x": 11,
+      "y": 10
+    },
+    {
+      "x": 3,
+      "y": 3
+    }
+  ],
+  "obstacles": [
+    {
+      "x": 8,
+      "y": 9,
+      "type": "wall"
+    },
+    {
+      "x": 8,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 9,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 10,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 11,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 10,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 9,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 8,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 7,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 6,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 5,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 4,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 3,
+      "type": "wall"
+    },
+    {
+      "x": 11,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 7,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 8,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 9,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 10,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "type": "wall"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "type": "wall"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "type": "wall"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "type": "wall"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "type": "wall"
+    },
+    {
+      "x": 9,
+      "y": 9,
+      "type": "wall"
+    },
+    {
+      "x": 11,
+      "y": 9,
+      "type": "wall"
+    },
+    {
+      "x": 12,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 2,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 3,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 4,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 5,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 6,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 7,
+      "y": 11,
+      "type": "wall"
+    },
+    {
+      "x": 8,
+      "y": 10,
+      "type": "wall"
+    }
+  ],
+  "doorBlocks": [
+    {
+      "x": 3,
+      "y": 5
+    },
+    {
+      "x": 10,
+      "y": 9
+    }
+  ]
+}
