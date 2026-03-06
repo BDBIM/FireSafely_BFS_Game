@@ -52,7 +52,8 @@
     "newGame": "Nouvelle partie",
     "restart": "Recommencer",
     "exportLevel": "Exporter JSON",
-    "hint": "Indice : {{count}} sortie(s) en {{coords}}. Trouvez la case la plus éloignée ! Les cases noires sont des obstacles (murs)."
+    "hint": "Indice : {{count}} sortie(s) en {{coords}}. Trouvez la case la plus éloignée ! Les cases noires sont des obstacles (murs).",
+    "wrongAttempt": "Faux !"
   },
   "gameConfig": {
     "title": "Paramètres du jeu",

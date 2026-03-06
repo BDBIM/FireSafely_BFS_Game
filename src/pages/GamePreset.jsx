@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import GameBoard from '../components/GameBoard'
 import GameInfo, { GameHint } from '../components/GameInfo'
+import WrongAttemptPopup from '../components/WrongAttemptPopup'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { exportLevel } from '../utils/levelStorage'
 import { generateMap, calculateDistanceToNearestStartForPoint, checkIsObstacle, checkIsDoorBlock } from '../components/MapGenerator'
@@ -23,6 +24,7 @@ function GamePreset() {
   const [allCellDistances, setAllCellDistances] = useState({})
   const [obstacles, setObstacles] = useState([])
   const [doorBlocks, setDoorBlocks] = useState([])
+  const [showWrongPopup, setShowWrongPopup] = useState(false)
   const maxAttempts = (typeof level?.maxAttempts === 'number' && level.maxAttempts >= 1) ? level.maxAttempts : 5
   const timeLimit = level?.timeLimit != null && typeof level.timeLimit === 'number' ? level.timeLimit : null
   const [timeRemaining, setTimeRemaining] = useState(() => (timeLimit != null ? timeLimit : null))
@@ -66,8 +68,9 @@ function GamePreset() {
     if (isCorrect) {
       setGameStatus('won')
       setScore(1000 + (maxAttempts - newAttempts + 1) * 200)
-    } else if (newAttempts >= maxAttempts) {
-      setGameStatus('lost')
+    } else {
+      setShowWrongPopup(true)
+      if (newAttempts >= maxAttempts) setGameStatus('lost')
     }
   }
 
@@ -116,6 +119,7 @@ function GamePreset() {
 
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
+      <WrongAttemptPopup show={showWrongPopup} onDismiss={() => setShowWrongPopup(false)} />
       <div className="bg-white rounded-[20px] p-6 md:p-8 shadow-card w-full max-w-[900px] relative z-10">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
           <button

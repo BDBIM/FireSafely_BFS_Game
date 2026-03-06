@@ -52,7 +52,8 @@
     "newGame": "新遊戲",
     "restart": "重新開始",
     "exportLevel": "導出 JSON",
-    "hint": "提示：有 {{count}} 個 Exit {{coords}}，請找出距離最近 Exit 最遠的格子！注意：黑色格子是障礙物（牆壁），需要繞過它們。"
+    "hint": "提示：有 {{count}} 個 Exit {{coords}}，請找出距離最近 Exit 最遠的格子！注意：黑色格子是障礙物（牆壁），需要繞過它們。",
+    "wrongAttempt": "答錯了！"
   },
   "gameConfig": {
     "title": "遊戲配置",

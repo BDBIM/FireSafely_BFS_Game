@@ -1,0 +1,35 @@
+.wrong-attempt-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1500;
+  pointer-events: none;
+  animation: wrongPopupIn 0.25s ease-out forwards;
+}
+
+.wrong-attempt-popup-text {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(229, 62, 62, 0.5);
+  white-space: nowrap;
+}
+
+@keyframes wrongPopupIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

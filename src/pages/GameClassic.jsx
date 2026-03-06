@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import GameBoard from '../components/GameBoard'
 import GameInfo, { GameHint } from '../components/GameInfo'
+import WrongAttemptPopup from '../components/WrongAttemptPopup'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { presetLevels } from '../data/loadPresetLevels'
 import { generateMap, calculateDistanceToNearestStartForPoint, checkIsObstacle, checkIsDoorBlock } from '../components/MapGenerator'
@@ -58,6 +59,7 @@ function GameClassic() {
   const [allCellDistances, setAllCellDistances] = useState({})
   const [obstacles, setObstacles] = useState([])
   const [doorBlocks, setDoorBlocks] = useState([])
+  const [showWrongPopup, setShowWrongPopup] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(() => (timeLimit != null ? timeLimit : null))
 
   const initializeForLevel = (lvl) => {
@@ -138,8 +140,9 @@ function GameClassic() {
       setTotalLevelScore((prev) => prev + levelScore)
       setShowingAnswer(true)
       setCountdownSeconds(NEXT_LEVEL_COUNTDOWN_SEC)
-    } else if (newAttempts >= maxAttempts) {
-      setGameStatus('lost')
+    } else {
+      setShowWrongPopup(true)
+      if (newAttempts >= maxAttempts) setGameStatus('lost')
     }
   }
 
@@ -210,6 +213,7 @@ function GameClassic() {
 
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
+      <WrongAttemptPopup show={showWrongPopup} onDismiss={() => setShowWrongPopup(false)} />
       <div className="bg-white rounded-[20px] p-6 md:p-8 shadow-card w-full max-w-[900px] relative z-10">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
           <button
@@ -231,8 +235,10 @@ function GameClassic() {
         </div>
 
         {gameStatus === 'won' && showingAnswer && (
-          <div className="mb-4 py-3 px-4 rounded-xl bg-green-100 border-2 border-green-400 text-green-800 text-center font-semibold">
-            {isLastLevel ? t('classic.allComplete') : t('classic.nextLevelIn', { seconds: countdownSeconds })}
+          <div className="fixed inset-0 z-[1500] flex items-center justify-center p-4 bg-black/40" aria-modal="true" role="dialog">
+            <div className="rounded-xl py-5 px-8 bg-green-50 border-2 border-green-400 text-green-800 text-center font-semibold text-lg shadow-xl">
+              {isLastLevel ? t('classic.allComplete') : t('classic.nextLevelIn', { seconds: countdownSeconds })}
+            </div>
           </div>
         )}
 

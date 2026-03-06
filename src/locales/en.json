@@ -52,7 +52,8 @@
     "newGame": "New Game",
     "restart": "Restart",
     "exportLevel": "Export JSON",
-    "hint": "Tip: {{count}} Exit(s) at {{coords}}. Find the cell farthest from the nearest Exit! Black cells are obstacles (walls)."
+    "hint": "Tip: {{count}} Exit(s) at {{coords}}. Find the cell farthest from the nearest Exit! Black cells are obstacles (walls).",
+    "wrongAttempt": "Wrong!"
   },
   "gameConfig": {
     "title": "Game settings",
