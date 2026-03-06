@@ -26,6 +26,8 @@
     "savedCount": "{{count}} enregistré(s)",
     "noSavedLevels": "Aucun niveau enregistré",
     "editLevel": "Modifier le niveau",
+    "simpleUi": "Interface simple",
+    "normalUi": "Interface normale",
     "deleteLevel": "Supprimer le niveau",
     "confirmDelete": "Voulez-vous vraiment supprimer ce niveau ?",
     "invalidLevelFile": "Format de fichier invalide",

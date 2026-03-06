@@ -26,6 +26,8 @@
     "savedCount": "{{count}} saved",
     "noSavedLevels": "No saved levels yet",
     "editLevel": "Edit level",
+    "simpleUi": "Simple UI",
+    "normalUi": "Normal UI",
     "deleteLevel": "Delete level",
     "confirmDelete": "Are you sure you want to delete this level?",
     "invalidLevelFile": "Invalid level file format",

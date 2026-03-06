@@ -26,6 +26,8 @@
     "savedCount": "已保存 {{count}} 個",
     "noSavedLevels": "還沒有保存的關卡",
     "editLevel": "編輯關卡",
+    "simpleUi": "簡易介面",
+    "normalUi": "一般介面",
     "deleteLevel": "刪除關卡",
     "confirmDelete": "確定要刪除這個關卡嗎？",
     "invalidLevelFile": "無效的關卡文件格式",
