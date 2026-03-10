@@ -37,7 +37,15 @@
     "rule2": "Black cells are obstacles; go around them",
     "rule3": "Each guess shows the distance from that cell to the nearest Exit",
     "rule4": "You have 5 attempts to find the farthest point",
-    "rule5": "Find the farthest point to win and score"
+    "rule5": "Find the farthest point to win and score",
+    "leaderboard": "Classic Leaderboard",
+    "leaderboardShow": "Show leaderboard",
+    "leaderboardHide": "Hide leaderboard",
+    "leaderboardRank": "Rank",
+    "leaderboardName": "Name",
+    "leaderboardScore": "Score",
+    "leaderboardDate": "Date",
+    "leaderboardEmpty": "No entries yet. Complete Classic mode to compete!"
   },
   "presetLevels": {
     "title": "Preset Levels",
@@ -125,7 +133,10 @@
     "noLevels": "No preset levels available.",
     "totalScore": "Total score",
     "levelsTotal": "Levels total",
-    "timeBonus": "Time bonus"
+    "timeBonus": "Time bonus",
+    "top20Congrats": "You made the top 20! Enter your name to appear on the leaderboard.",
+    "enterNameForBoard": "Your name",
+    "submitName": "Submit"
   },
   "board": {
     "obstacleWall": "Obstacle (wall)",

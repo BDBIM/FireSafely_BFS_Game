@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getSavedLevels, deleteLevel } from '../utils/levelStorage'
+import { getLeaderboard } from '../utils/classicLeaderboard'
 import DifficultyStars from '../components/DifficultyStars'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 
@@ -18,10 +19,31 @@ function Home() {
       return true
     }
   })
+  const [showLeaderboard, setShowLeaderboard] = useState(() => {
+    try {
+      return localStorage.getItem('classic_leaderboard_visible') === 'true'
+    } catch {
+      return false
+    }
+  })
+  const [leaderboardList, setLeaderboardList] = useState([])
+  const [titleClickCount, setTitleClickCount] = useState(0)
 
   useEffect(() => {
     setCustomLevels(getSavedLevels())
   }, [])
+
+  useEffect(() => {
+    if (showLeaderboard && location.pathname === '/') setLeaderboardList(getLeaderboard())
+  }, [showLeaderboard, location.pathname])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('classic_leaderboard_visible', showLeaderboard ? 'true' : 'false')
+    } catch {
+      // ignore
+    }
+  }, [showLeaderboard])
 
   useEffect(() => {
     try {
@@ -64,10 +86,48 @@ function Home() {
     })
   }
 
+  const handleToggleLeaderboard = () => {
+    setShowLeaderboard((prev) => !prev)
+    if (!showLeaderboard) setLeaderboardList(getLeaderboard())
+  }
+
+  const handleTitleClick = () => {
+    if (showLeaderboard) return
+    setTitleClickCount((c) => {
+      const next = c + 1
+      if (next >= 5) {
+        setShowLeaderboard(true)
+        setLeaderboardList(getLeaderboard())
+        return 0
+      }
+      return next
+    })
+  }
+
+  const formatLeaderboardDate = (iso) => {
+    try {
+      const d = new Date(iso)
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+    } catch {
+      return iso
+    }
+  }
+
   return (
     <div className="relative w-full min-h-screen flex justify-center items-center p-4 md:p-5">
       <div className="fixed inset-0 bg-white z-0 md:hidden" aria-hidden />
       <div className="relative z-10 w-full max-w-[1000px] bg-white py-6 px-4 md:rounded-[20px] md:p-8 md:py-10 md:shadow-card rounded-none shadow-none">
+        {showLeaderboard && (
+          <button
+            type="button"
+            onClick={handleToggleLeaderboard}
+            className="absolute bottom-4 left-4 opacity-40 hover:opacity-70 text-gray-500 hover:text-primary transition-all p-1.5 rounded-md text-sm"
+            title={t('home.leaderboardHide')}
+            aria-label={t('home.leaderboardHide')}
+          >
+            🏆
+          </button>
+        )}
         <div className="flex flex-col items-center mb-10 pr-20 md:pr-24">
           <div className="absolute top-4 right-4">
             <div className="flex items-center gap-2">
@@ -82,7 +142,10 @@ function Home() {
               <LanguageSwitcher />
             </div>
           </div>
-          <h1 className="text-center text-primary font-bold text-3xl md:text-4xl mb-2.5 drop-shadow-sm">
+          <h1
+            className="text-center text-primary font-bold text-3xl md:text-4xl mb-2.5 drop-shadow-sm select-none"
+            onClick={handleTitleClick}
+          >
             {t('home.title')}
           </h1>
           <p className="text-center text-gray-500 text-lg md:text-xl mb-0">
@@ -203,6 +266,38 @@ function Home() {
             </div>
           )}
         </div>
+
+        {showLeaderboard && (
+          <div className="mt-8 rounded-xl border-2 border-primary/30 bg-gradient-to-br from-[#f5f7fa] to-[#e8ecf1] p-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">{t('home.leaderboard')}</h3>
+            {leaderboardList.length === 0 ? (
+              <p className="text-center text-gray-500 italic py-4">{t('home.leaderboardEmpty')}</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b-2 border-primary/40 text-gray-700">
+                      <th className="py-2 pr-2 text-left">{t('home.leaderboardRank')}</th>
+                      <th className="py-2 pr-2 text-left">{t('home.leaderboardName')}</th>
+                      <th className="py-2 pr-2 text-right">{t('home.leaderboardScore')}</th>
+                      <th className="py-2 text-left">{t('home.leaderboardDate')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leaderboardList.map((entry, i) => (
+                      <tr key={`${entry.date}-${i}`} className="border-b border-gray-200">
+                        <td className="py-2 pr-2 font-medium">{i + 1}</td>
+                        <td className="py-2 pr-2">{entry.name}</td>
+                        <td className="py-2 pr-2 text-right font-semibold">{entry.score}</td>
+                        <td className="py-2 text-gray-500">{formatLeaderboardDate(entry.date)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
 
         {!isSimpleUi && (
           <div className="bg-amber-100 border-2 border-amber-400 rounded-xl p-6 mt-8">

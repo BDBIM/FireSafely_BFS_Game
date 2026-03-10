@@ -37,7 +37,15 @@
     "rule2": "黑色格子是障礙物，需要繞過它們",
     "rule3": "每次猜測會顯示該點到最近 Exit 的距離",
     "rule4": "你有 5 次機會找到最遠點",
-    "rule5": "找到最遠點即可獲勝並獲得得分"
+    "rule5": "找到最遠點即可獲勝並獲得得分",
+    "leaderboard": "經典排行榜",
+    "leaderboardShow": "顯示排行榜",
+    "leaderboardHide": "隱藏排行榜",
+    "leaderboardRank": "名次",
+    "leaderboardName": "名字",
+    "leaderboardScore": "分數",
+    "leaderboardDate": "日期",
+    "leaderboardEmpty": "尚無紀錄。完成經典模式即可上榜！"
   },
   "presetLevels": {
     "title": "預設關卡",
@@ -125,7 +133,10 @@
     "noLevels": "暫無預設關卡。",
     "totalScore": "總分",
     "levelsTotal": "關卡合計",
-    "timeBonus": "時間獎勵"
+    "timeBonus": "時間獎勵",
+    "top20Congrats": "你進入前 20 名！輸入名字即可登上排行榜。",
+    "enterNameForBoard": "你的名字",
+    "submitName": "提交"
   },
   "board": {
     "obstacleWall": "障礙物（牆壁）",

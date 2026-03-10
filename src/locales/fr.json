@@ -37,7 +37,15 @@
     "rule2": "Les cases noires sont des obstacles à contourner",
     "rule3": "Chaque essai affiche la distance à la sortie la plus proche",
     "rule4": "Vous avez 5 essais pour trouver le point le plus loin",
-    "rule5": "Trouvez le point le plus loin pour gagner et marquer"
+    "rule5": "Trouvez le point le plus loin pour gagner et marquer",
+    "leaderboard": "Classement Classique",
+    "leaderboardShow": "Afficher le classement",
+    "leaderboardHide": "Masquer le classement",
+    "leaderboardRank": "Rang",
+    "leaderboardName": "Nom",
+    "leaderboardScore": "Score",
+    "leaderboardDate": "Date",
+    "leaderboardEmpty": "Aucune entrée. Terminez le mode Classique pour participer !"
   },
   "presetLevels": {
     "title": "Niveaux prédéfinis",
@@ -125,7 +133,10 @@
     "noLevels": "Aucun niveau prédéfini.",
     "totalScore": "Score total",
     "levelsTotal": "Total niveaux",
-    "timeBonus": "Bonus temps"
+    "timeBonus": "Bonus temps",
+    "top20Congrats": "Vous êtes dans le top 20 ! Entrez votre nom pour figurer au classement.",
+    "enterNameForBoard": "Votre nom",
+    "submitName": "Envoyer"
   },
   "board": {
     "obstacleWall": "Obstacle (mur)",

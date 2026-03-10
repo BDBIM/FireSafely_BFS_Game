@@ -7,6 +7,7 @@ import WrongAttemptPopup from '../components/WrongAttemptPopup'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { presetLevels } from '../data/loadPresetLevels'
 import { generateMap, calculateDistanceToNearestStartForPoint, checkIsObstacle, checkIsDoorBlock } from '../components/MapGenerator'
+import { isTop20, addEntry, getLeaderboard } from '../utils/classicLeaderboard'
 
 const CLASSIC_LEVEL_COUNT = 8
 const NEXT_LEVEL_COUNTDOWN_SEC = 5
@@ -78,6 +79,9 @@ function GameClassic() {
   const [doorBlocks, setDoorBlocks] = useState([])
   const [showWrongPopup, setShowWrongPopup] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(() => (timeLimit != null ? timeLimit : null))
+  const [leaderboardNameInput, setLeaderboardNameInput] = useState('')
+  const [nameSubmitted, setNameSubmitted] = useState(false)
+  const frozenCompleteScoreRef = useRef(null)
 
   const initializeForLevel = (lvl) => {
     if (!lvl) return
@@ -204,20 +208,101 @@ function GameClassic() {
   const allComplete = gameStatus === 'won' && showingAnswer && isLastLevel
 
   if (allComplete) {
+    const leaderboardEnabled = typeof localStorage !== 'undefined' && localStorage.getItem('classic_leaderboard_visible') === 'true'
     const timeBonus = Math.max(0, TIME_BONUS_MAX - elapsedSeconds)
     const totalScore = totalLevelScore + timeBonus
+    if (frozenCompleteScoreRef.current === null) frozenCompleteScoreRef.current = totalScore
+    const scoreToUse = frozenCompleteScoreRef.current
+    const needName = leaderboardEnabled && isTop20(scoreToUse) && !nameSubmitted
+
+    if (needName) {
+      const handleSubmitName = (e) => {
+        e.preventDefault()
+        addEntry(leaderboardNameInput, scoreToUse)
+        setNameSubmitted(true)
+      }
+      return (
+        <div className="w-full min-h-screen flex justify-center items-center p-4">
+          <div className="bg-white rounded-[20px] p-8 shadow-card max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">🎉 {t('classic.allComplete')}</h2>
+            <p className="text-lg font-semibold text-[#667eea] mb-2">{t('classic.totalScore')}: {scoreToUse}</p>
+            <p className="text-gray-600 mb-4">{t('classic.top20Congrats')}</p>
+            <form onSubmit={handleSubmitName} className="flex flex-col gap-3 text-left">
+              <label className="font-medium text-gray-700">{t('classic.enterNameForBoard')}</label>
+              <input
+                type="text"
+                value={leaderboardNameInput}
+                onChange={(e) => setLeaderboardNameInput(e.target.value)}
+                placeholder={t('classic.enterNameForBoard')}
+                className="w-full py-2.5 px-4 rounded-lg border-2 border-gray-300 focus:border-primary outline-none"
+                maxLength={30}
+                autoFocus
+              />
+              <button
+                type="submit"
+                className="py-3 px-6 rounded-lg text-white font-semibold bg-gradient-to-br from-[#667eea] to-[#764ba2] hover:-translate-y-0.5 hover:shadow-lg transition-all"
+              >
+                {t('classic.submitName')}
+              </button>
+            </form>
+          </div>
+        </div>
+      )
+    }
+
+    const leaderboardList = leaderboardEnabled ? getLeaderboard() : []
+    const formatBoardDate = (iso) => {
+      try {
+        const d = new Date(iso)
+        return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+      } catch {
+        return iso
+      }
+    }
+
     return (
-      <div className="w-full min-h-screen flex justify-center items-center">
-        <div className="bg-white rounded-[20px] p-8 shadow-card max-w-md text-center">
+      <div className="w-full min-h-screen flex justify-center items-center p-4">
+        <div className="bg-white rounded-[20px] p-8 shadow-card max-w-md w-full text-center">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">🎉 {t('classic.allComplete')}</h2>
           <p className="text-lg text-gray-600 mb-1">{t('classic.totalTime')}: <strong>{formatElapsed(elapsedSeconds)}</strong></p>
           <p className="text-sm text-gray-500 mb-1">{t('classic.levelsTotal')}: <strong>{totalLevelScore}</strong></p>
           <p className="text-sm text-gray-500 mb-2">{t('classic.timeBonus')}: <strong>+{timeBonus}</strong></p>
-          <p className="text-xl font-bold text-[#667eea] mb-4">{t('classic.totalScore')}: <strong>{totalScore}</strong></p>
+          <p className="text-xl font-bold text-[#667eea] mb-4">{t('classic.totalScore')}: <strong>{scoreToUse}</strong></p>
+          {leaderboardEnabled && (
+            <div className="mb-6 rounded-lg border-2 border-primary/30 bg-gray-50/80 p-4 text-left">
+              <h3 className="text-base font-bold text-gray-800 mb-3 text-center">{t('home.leaderboard')}</h3>
+              {leaderboardList.length === 0 ? (
+                <p className="text-center text-gray-500 italic text-sm py-2">{t('home.leaderboardEmpty')}</p>
+              ) : (
+                <div className="overflow-x-auto max-h-48 overflow-y-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-primary/40 text-gray-700">
+                        <th className="py-1 pr-1 text-left">{t('home.leaderboardRank')}</th>
+                        <th className="py-1 pr-1 text-left">{t('home.leaderboardName')}</th>
+                        <th className="py-1 pr-1 text-right">{t('home.leaderboardScore')}</th>
+                        <th className="py-1 text-left">{t('home.leaderboardDate')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {leaderboardList.map((entry, i) => (
+                        <tr key={`${entry.date}-${i}`} className="border-b border-gray-200">
+                          <td className="py-1 pr-1 font-medium">{i + 1}</td>
+                          <td className="py-1 pr-1">{entry.name}</td>
+                          <td className="py-1 pr-1 text-right font-semibold">{entry.score}</td>
+                          <td className="py-1 text-gray-500">{formatBoardDate(entry.date)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
           <button
             type="button"
             onClick={handleBackToHome}
-            className="mt-6 py-3 px-6 rounded-lg text-white font-semibold bg-gradient-to-br from-[#667eea] to-[#764ba2] hover:-translate-y-0.5 hover:shadow-lg transition-all"
+            className="mt-2 py-3 px-6 rounded-lg text-white font-semibold bg-gradient-to-br from-[#667eea] to-[#764ba2] hover:-translate-y-0.5 hover:shadow-lg transition-all"
           >
             ← {t('common.backToHome')}
           </button>
