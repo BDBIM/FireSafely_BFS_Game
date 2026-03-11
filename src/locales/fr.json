@@ -128,6 +128,8 @@
     "levelCounter": "Niveau {{current}} / {{total}}",
     "totalTime": "Temps total",
     "nextLevelIn": "Niveau suivant dans {{seconds}}s…",
+    "pauseToView": "Pause pour voir le résultat",
+    "continueCountdown": "Continuer",
     "allComplete": "Tous les niveaux terminés !",
     "gameOver": "Partie terminée",
     "noLevels": "Aucun niveau prédéfini.",

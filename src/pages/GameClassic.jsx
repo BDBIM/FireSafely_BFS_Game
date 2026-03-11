@@ -10,7 +10,7 @@ import { generateMap, calculateDistanceToNearestStartForPoint, checkIsObstacle, 
 import { isTop20, addEntry, getLeaderboard } from '../utils/classicLeaderboard'
 
 const CLASSIC_LEVEL_COUNT = 8
-const NEXT_LEVEL_COUNTDOWN_SEC = 5
+const NEXT_LEVEL_COUNTDOWN_SEC = 3
 const TIME_BONUS_MAX = 5000 // max bonus at 0 seconds; each second reduces bonus by 1
 
 function getNumericDifficulty(level) {
@@ -62,8 +62,10 @@ function GameClassic() {
   const [totalLevelScore, setTotalLevelScore] = useState(0) // sum of each level's score when won
   const [showingAnswer, setShowingAnswer] = useState(false)
   const [countdownSeconds, setCountdownSeconds] = useState(0)
+  const [countdownPaused, setCountdownPaused] = useState(false)
 
   const level = levels[currentIndex] || null
+  const isLastLevel = currentIndex >= levels.length - 1
   const maxAttempts = (typeof level?.maxAttempts === 'number' && level.maxAttempts >= 1) ? level.maxAttempts : 5
   const timeLimit = level?.timeLimit != null && typeof level.timeLimit === 'number' ? level.timeLimit : null
 
@@ -82,6 +84,7 @@ function GameClassic() {
   const [leaderboardNameInput, setLeaderboardNameInput] = useState('')
   const [nameSubmitted, setNameSubmitted] = useState(false)
   const frozenCompleteScoreRef = useRef(null)
+  const answerShownForLevelRef = useRef(-1)
 
   const initializeForLevel = (lvl) => {
     if (!lvl) return
@@ -98,6 +101,7 @@ function GameClassic() {
     setScore(0)
     setShowingAnswer(false)
     setCountdownSeconds(0)
+    answerShownForLevelRef.current = -1
     if (lvl.timeLimit != null && typeof lvl.timeLimit === 'number') {
       setTimeRemaining(lvl.timeLimit)
     } else {
@@ -109,9 +113,9 @@ function GameClassic() {
     if (level) initializeForLevel(level)
   }, [currentIndex, level])
 
-  // Countdown 5 → 0 when showing answer; advance to next level when countdown hits 0
+  // Countdown 3 → 0 when showing answer (pauses if countdownPaused); advance to next level when countdown hits 0
   useEffect(() => {
-    if (!showingAnswer || currentIndex >= levels.length - 1 || countdownSeconds <= 0) return
+    if (!showingAnswer || isLastLevel || countdownSeconds <= 0 || countdownPaused) return
     const interval = setInterval(() => {
       setCountdownSeconds((prev) => {
         if (prev <= 1) {
@@ -122,19 +126,18 @@ function GameClassic() {
       })
     }, 1000)
     return () => clearInterval(interval)
-  }, [showingAnswer, currentIndex, levels.length, countdownSeconds])
+  }, [showingAnswer, isLastLevel, currentIndex, levels.length, countdownSeconds, countdownPaused])
 
-  const isLastLevel = currentIndex >= levels.length - 1
-  const gameEnded = gameStatus === 'lost' || (gameStatus === 'won' && showingAnswer && isLastLevel)
+  const runEnded = showingAnswer && isLastLevel && (gameStatus === 'won' || gameStatus === 'lost')
 
-  // Overall elapsed timer (updates every second); stop when game is finished or failed
+  // Overall elapsed timer (updates every second); stop when run ends (last level resolved)
   useEffect(() => {
-    if (gameEnded) return
+    if (runEnded) return
     const interval = setInterval(() => {
       setElapsedSeconds(Math.floor((Date.now() - overallStartTime) / 1000))
     }, 1000)
     return () => clearInterval(interval)
-  }, [overallStartTime, gameEnded])
+  }, [overallStartTime, runEnded])
 
   const handleCellClick = (x, y) => {
     if (showingAnswer) return
@@ -156,14 +159,28 @@ function GameClassic() {
 
     if (isCorrect) {
       const levelScore = 1000 + (maxAttempts - newAttempts + 1) * 200
+      answerShownForLevelRef.current = currentIndex
       setGameStatus('won')
       setScore(levelScore)
       setTotalLevelScore((prev) => prev + levelScore)
       setShowingAnswer(true)
       setCountdownSeconds(NEXT_LEVEL_COUNTDOWN_SEC)
+      setCountdownPaused(false)
     } else {
       setShowWrongPopup(true)
-      if (newAttempts >= maxAttempts) setGameStatus('lost')
+      if (newAttempts >= maxAttempts) {
+        answerShownForLevelRef.current = currentIndex
+        setGameStatus('lost')
+        setScore(0)
+        setShowingAnswer(true)
+        if (!isLastLevel) {
+          setCountdownSeconds(NEXT_LEVEL_COUNTDOWN_SEC)
+          setCountdownPaused(false)
+        } else {
+          setCountdownSeconds(0)
+          setCountdownPaused(false)
+        }
+      }
     }
   }
 
@@ -186,6 +203,21 @@ function GameClassic() {
     if (timeLimit != null && timeRemaining === 0 && gameStatus === 'playing') setGameStatus('lost')
   }, [timeLimit, timeRemaining, gameStatus])
 
+  // If a level is lost (time up or attempts), reveal answer and continue to next with 0 score.
+  useEffect(() => {
+    if (gameStatus !== 'lost' || showingAnswer) return
+    answerShownForLevelRef.current = currentIndex
+    setScore(0)
+    setShowingAnswer(true)
+    if (!isLastLevel) {
+      setCountdownSeconds(NEXT_LEVEL_COUNTDOWN_SEC)
+      setCountdownPaused(false)
+    } else {
+      setCountdownSeconds(0)
+      setCountdownPaused(false)
+    }
+  }, [gameStatus, showingAnswer, isLastLevel, currentIndex])
+
   const handleBackToHome = () => navigate('/')
 
   if (levels.length === 0) {
@@ -205,7 +237,7 @@ function GameClassic() {
     )
   }
 
-  const allComplete = gameStatus === 'won' && showingAnswer && isLastLevel
+  const allComplete = showingAnswer && isLastLevel && (gameStatus === 'won' || gameStatus === 'lost') && answerShownForLevelRef.current === currentIndex
 
   if (allComplete) {
     const leaderboardEnabled = typeof localStorage !== 'undefined' && localStorage.getItem('classic_leaderboard_visible') === 'true'
@@ -336,15 +368,24 @@ function GameClassic() {
           </div>
         </div>
 
-        {gameStatus === 'won' && showingAnswer && (
+        {((gameStatus === 'won' && showingAnswer) || (gameStatus === 'lost' && showingAnswer && !isLastLevel)) && (
           <div className="fixed inset-0 z-[1500] flex items-center justify-center p-4 bg-black/40" aria-modal="true" role="dialog">
-            <div className="rounded-xl py-5 px-8 bg-green-50 border-2 border-green-400 text-green-800 text-center font-semibold text-lg shadow-xl">
-              {isLastLevel ? t('classic.allComplete') : t('classic.nextLevelIn', { seconds: countdownSeconds })}
+            <div className={`rounded-xl py-5 px-8 text-center font-semibold text-lg shadow-xl flex flex-col gap-3 ${gameStatus === 'lost' ? 'bg-red-50 border-2 border-red-400 text-red-800' : 'bg-green-50 border-2 border-green-400 text-green-800'}`}>
+              {t('classic.nextLevelIn', { seconds: countdownSeconds })}
+              {!isLastLevel && (
+                <button
+                  type="button"
+                  onClick={() => setCountdownPaused((p) => !p)}
+                  className={`py-2 px-4 rounded-lg text-sm font-semibold text-white transition-colors ${gameStatus === 'lost' ? 'bg-red-500 hover:bg-red-600' : 'bg-green-600 hover:bg-green-700'}`}
+                >
+                  {countdownPaused ? t('classic.continueCountdown') : t('classic.pauseToView')}
+                </button>
+              )}
             </div>
           </div>
         )}
 
-        {gameStatus === 'lost' && (
+        {gameStatus === 'lost' && !showingAnswer && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/50" aria-modal="true" role="dialog">
             <div className="rounded-xl py-6 px-6 max-w-sm w-full bg-red-50 border-2 border-red-400 text-red-800 text-center shadow-xl">
               <p className="font-semibold text-lg m-0">{t('classic.gameOver')}</p>

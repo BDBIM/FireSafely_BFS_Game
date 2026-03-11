@@ -128,6 +128,8 @@
     "levelCounter": "關卡 {{current}} / {{total}}",
     "totalTime": "總耗時",
     "nextLevelIn": "{{seconds}} 秒後進入下一關…",
+    "pauseToView": "暫停查看結果",
+    "continueCountdown": "繼續",
     "allComplete": "全部通關！",
     "gameOver": "遊戲結束",
     "noLevels": "暫無預設關卡。",
