@@ -1,4 +1,9 @@
 {
+  "offline": {
+    "readyTitle": "Ready for offline use",
+    "readyHint": "In Safari, tap Share → Add to Home Screen from the home page. Then turn on Airplane Mode and open the icon.",
+    "dismiss": "OK"
+  },
   "common": {
     "backToHome": "Back to Home",
     "seconds": "{{count}} sec",

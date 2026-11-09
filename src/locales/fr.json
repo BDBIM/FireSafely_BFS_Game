@@ -1,4 +1,9 @@
 {
+  "offline": {
+    "readyTitle": "Prêt hors ligne",
+    "readyHint": "Dans Safari, touchez Partager → Sur l'écran d'accueil depuis la page d'accueil. Activez le mode Avion, puis ouvrez l'icône.",
+    "dismiss": "OK"
+  },
   "common": {
     "backToHome": "Retour à l'accueil",
     "seconds": "{{count}} s",

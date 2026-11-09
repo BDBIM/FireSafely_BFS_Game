@@ -6,10 +6,13 @@ import GameRandom from './pages/GameRandom'
 import GameClassic from './pages/GameClassic'
 import LevelEditor from './pages/LevelEditor'
 import PresetLevels from './pages/PresetLevels'
+import OfflineReady from './components/OfflineReady'
 
 function App() {
   return (
-    <Routes>
+    <>
+      <OfflineReady />
+      <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/presetLevels" element={<PresetLevels />} />
       <Route path="/game" element={<Navigate to="/game/random" replace />} />
@@ -17,7 +20,8 @@ function App() {
       <Route path="/game/preset" element={<GamePreset />} />
       <Route path="/game/classic" element={<GameClassic />} />
       <Route path="/editor" element={<LevelEditor />} />
-    </Routes>
+      </Routes>
+    </>
   )
 }
 

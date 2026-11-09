@@ -1,4 +1,9 @@
 {
+  "offline": {
+    "readyTitle": "已可離線使用",
+    "readyHint": "用 Safari 的「分享 → 加入主畫面」。請從首頁加入。加入後開啟飛航模式，從主畫面圖示再玩一次。",
+    "dismiss": "知道了"
+  },
   "common": {
     "backToHome": "返回首頁",
     "seconds": "{{count}} 秒",
